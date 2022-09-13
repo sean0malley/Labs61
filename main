@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+
+template<typename T>
+typename std::vector<T>::iterator func(std::vector<T>& arr)
+{
+    // вектор пуст
+    if (arr.empty())
+    {
+        return arr.end();
+    }
+
+    // вектор содержит единственный элемент
+    if (arr.size() == 1)
+    {
+        return arr.begin();
+    }
+
+    // ищем среднее
+    T sum{};
+
+    for (const auto& x : arr)
+    {
+        sum += x;
+    }
+
+    T average = sum / arr.size();
+
+    // ищем минимальное отклонение
+    T d = std::abs(arr[0] - average);
+    std::size_t idx = 0;
+    for (std::size_t i = 1; i < arr.size(); i++)
+    {
+        T diff = std::abs(arr[i] - average);
+        if (diff < d)
+        {
+            d = diff;
+            idx = i;
+        }
+    }
+
+    // возвращаем итератор
+    return arr.begin() + idx;
+}
+
+// вывод содержимого контейнера на экран
+template<typename T>
+void print(const std::vector<T>& arr)
+{
+    for (const auto& x : arr)
+    {
+        std::cout << x << ' ';
+    }
+    std::cout << '\n';
+}
+
+int main(void)
+{
+    std::vector<int> v1 = { 2, 5, 8, 1, 21 };
+    print(v1);
+    std::cout << "Func (int) = " << *func(v1) << '\n';
+
+    std::vector<double> v2 = { 4.5, 4.1, 10.9, -2 };
+    print(v2);
+    std::cout << "Func (double) = " << *func(v2) << '\n';
+
+    std::vector<char> v3 = { '1', '*', 'd' };
+    print(v3);
+    std::cout << "Func (char) = " << *func(v3) << '\n';
+}
